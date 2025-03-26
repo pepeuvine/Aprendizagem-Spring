@@ -1,5 +1,6 @@
 package com.example.meu_primeiro_projeto.service;
 
+import com.example.meu_primeiro_projeto.dto.ProductDTO;
 import com.example.meu_primeiro_projeto.model.Product;
 import com.example.meu_primeiro_projeto.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts(){
+        return productRepository.findAll().stream().map(ProductDTO::new).toList();
     }
 
-    public Optional<Product> getProductById(Long id){
-             return productRepository.findById(id);
+    public Optional<ProductDTO> getProductById(Long id){
+             return productRepository.findById(id).map(ProductDTO::new);
     }
 
     public Product addProduct(Product product){

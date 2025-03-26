@@ -1,5 +1,6 @@
 package com.example.meu_primeiro_projeto.controller;
 
+import com.example.meu_primeiro_projeto.dto.ProductDTO;
 import com.example.meu_primeiro_projeto.model.Product;
 import com.example.meu_primeiro_projeto.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDTO>> getAllProducts(){
+        List<ProductDTO> products = productService.getAllProducts();
         if(products.isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id){
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

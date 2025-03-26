@@ -1,5 +1,6 @@
 package com.example.meu_primeiro_projeto.controller;
 
+import com.example.meu_primeiro_projeto.dto.UserDTO;
 import com.example.meu_primeiro_projeto.model.User;
 import com.example.meu_primeiro_projeto.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -21,8 +23,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
+        List<UserDTO> users = userService.getAllUsers();
         if(users.isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -30,24 +32,24 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user){
+    public ResponseEntity<UserDTO> addUser(@RequestBody User user){
         User newUser = userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(newUser));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
         boolean deleted = userService.deleteUser(id);
         if(deleted){
-            return ResponseEntity.ok("User deletado!");
+            return ResponseEntity.ok(Map.of("message","User deletado!"));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","Usuário não encontrado!"));
     }
 }
